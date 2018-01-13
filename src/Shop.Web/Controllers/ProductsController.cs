@@ -22,19 +22,27 @@ namespace Shop.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View(products);
+            var _products = products.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Category = p.Category,
+                Price = p.Price
+            });
+
+            return View(_products);
         }
 
         [HttpGet("add")]
         public IActionResult AddProduct()
         {
-            var viewModel = new ProductViewModel();
+            var viewModel = new AddProductViewModel();
 
             return View(viewModel);
         }
 
         [HttpPost("add")]
-        public IActionResult AddProduct(ProductViewModel viewModel)
+        public IActionResult AddProduct(AddProductViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
