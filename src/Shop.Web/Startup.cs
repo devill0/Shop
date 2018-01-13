@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Shop.Web.Framework;
 
 namespace Shop.Web
 {
@@ -21,11 +22,11 @@ namespace Shop.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(); // co konfigurujemy, kolejnosc jest bez znaczenia
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env) // kolejność jest ważna
         {
             if (env.IsDevelopment())
             {
@@ -38,6 +39,8 @@ namespace Shop.Web
             }
 
             app.UseStaticFiles();
+
+            app.UseMyMiddleware();
 
             app.UseMvc(routes =>
             {
