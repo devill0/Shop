@@ -15,7 +15,8 @@ namespace Shop.Web.Controllers
             => View();
 
         [HttpPost("login")]
-        public async Task<IActionResult> LoginAsync([FromForm]LoginViewModel viewModel) 
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([FromForm]LoginViewModel viewModel) 
         {
             if (!ModelState.IsValid)
             {
@@ -34,6 +35,18 @@ namespace Shop.Web.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return RedirectToAction("Index", "Cart");
+        }
+
+        [HttpGet("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            await HttpContext.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
