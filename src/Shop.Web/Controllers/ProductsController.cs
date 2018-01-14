@@ -25,13 +25,7 @@ namespace Shop.Web.Controllers
         {
             var products = productService
                 .GetAll()
-                .Select(p => new ProductViewModel
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Category = p.Category,
-                Price = p.Price
-            });
+                .Select(p => new ProductViewModel(p));
 
             return View(products);
         }
@@ -39,13 +33,13 @@ namespace Shop.Web.Controllers
         [HttpGet("add")]
         public IActionResult AddProduct()
         {
-            var viewModel = new AddProductViewModel();
+            var viewModel = new AddOrUpdateProductViewModel();
 
             return View(viewModel);
         }
 
         [HttpPost("add")]
-        public IActionResult AddProduct(AddProductViewModel viewModel)
+        public IActionResult AddProduct(AddOrUpdateProductViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -53,6 +47,32 @@ namespace Shop.Web.Controllers
             }
 
             productService.Add(viewModel.Name, viewModel.Category, viewModel.Price);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet("{id}/update")]
+        public IActionResult Update(Guid id)
+        {
+            var product = productService.Get(id);
+            if(product == null)
+            {
+                return NotFound(); //404
+            }
+            var viewModel = new AddOrUpdateProductViewModel();
+
+            return View(viewModel);
+        }
+
+        [HttpPost("{id}/update")]
+        public IActionResult Update(AddOrUpdateProductViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
+           // productService.Add(viewModel.Name, viewModel.Category, viewModel.Price);
 
             return RedirectToAction(nameof(Index));
         }
