@@ -4,16 +4,26 @@ using System.Text;
 using Shop.Core.DTO;
 using Shop.Core.Repositories;
 using Shop.Core.Domain;
+using AutoMapper;
 
 namespace Shop.Core.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             this.userRepository = userRepository;
+            this.mapper = mapper;
+        }
+
+        public UserDTO Get(string email)
+        {
+            var user = userRepository.Get(email);
+
+            return user == null ? null : mapper.Map<UserDTO>(user);
         }
 
         public void Login(string email, string password)

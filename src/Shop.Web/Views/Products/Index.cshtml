@@ -1,10 +1,19 @@
-﻿@model IEnumerable<ProductViewModel>
+﻿@using Shop.Core.DTO;
+@model IEnumerable<ProductViewModel>
 
-<div class="row">
-    <div class="col-lg-12">
-        <a asp-area="" asp-action="AddProduct" class="btn btn-primary">Add product</a>        
+@{ 
+    var isAdmin = User.IsInRole(RoleDTO.Admin.ToString());
+}
+
+@if (isAdmin)
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <a asp-area="" asp-action="AddProduct" class="btn btn-primary">Add product</a>
+        </div>
     </div>
-</div>
+}
+
 <div class="row">
     <div class="col-lg-12">
         <h1>Products</h1>
@@ -20,8 +29,11 @@
                     <h4 class="card-title">@product.Name</h4>
                     <h6 class="card-subtitle mb-2 text-muted">@product.Category</h6>
                     <p class="card-text">@product.Price PLN</p>
-                    <a href="#" title="Add product" class="card-link">Add</a>
-                    <a asp-controller="Products" asp-action="Update" asp-route-id="@product.Id" title="Update product" class="card-link">Update</a>
+                    <a href="#" title="Add to cart" class="card-link">Add to cart</a>
+                    @if (isAdmin)
+                    {
+                        <a asp-controller="Products" asp-action="Update" asp-route-id="@product.Id" title="Update product" class="card-link">Update</a>
+                    }                    
                 </div>
             </div>
         </div>

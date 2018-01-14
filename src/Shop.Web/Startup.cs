@@ -13,6 +13,7 @@ using Shop.Core.Mapper;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Shop.Core.DTO;
 
 namespace Shop.Web
 {
@@ -43,6 +44,8 @@ namespace Shop.Web
                     c.AccessDeniedPath = new PathString("/forbidden"); //303 
                     c.ExpireTimeSpan = TimeSpan.FromDays(7);
                 });
+            services.AddAuthorization(a => a.AddPolicy("require-admin",
+                p => p.RequireRole(RoleDTO.Admin.ToString())));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
