@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Shop.Web.Framework;
 using Shop.Core.Repositories;
 using Shop.Core.Services;
+using Shop.Core.Mapper;
+using AutoMapper;
 
 namespace Shop.Web
 {
@@ -27,6 +29,9 @@ namespace Shop.Web
             services.AddMvc(); // co konfigurujemy, kolejnosc jest bez znaczenia
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+            //var mapper = AutoMapperConfig.GetMapper();
+            //services.AddSingleton<IMapper>(mapper); // <IMapper> is not required
+            services.AddSingleton(AutoMapperConfig.GetMapper());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
