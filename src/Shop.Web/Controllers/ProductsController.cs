@@ -7,6 +7,7 @@ using Shop.Core.Domain;
 using Shop.Web.Models;
 using Shop.Core.Repositories;
 using Shop.Core.Services;
+using Shop.Core.DTO;
 
 namespace Shop.Web.Controllers
 {
@@ -72,7 +73,13 @@ namespace Shop.Web.Controllers
                 return View(viewModel);
             }
 
-           // productService.Add(viewModel.Name, viewModel.Category, viewModel.Price);
+            productService.Update(new ProductDTO
+            {
+                Id = viewModel.Id,
+                Name = viewModel.Name,
+                Category = viewModel.Category,
+                Price = viewModel.Price
+            });
 
             return RedirectToAction(nameof(Index));
         }

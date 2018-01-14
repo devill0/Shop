@@ -43,6 +43,19 @@ namespace Shop.Core.Services
         {
             var product = new Product(name, category, price);
             productRepository.Add(product);
-        }        
+        }
+
+        public void Update(ProductDTO product)
+        {
+            var existingProduct = productRepository.Get(product.Id);
+            if(existingProduct == null)
+            {
+                throw new Exception($"Product was not found, id: '{product.Id}'");
+            }
+            existingProduct.SetName(product.Name);
+            existingProduct.SetCategory(product.Category);
+            existingProduct.SetPrice(product.Price);
+            productRepository.Update(existingProduct);
+        }
     }
 }
