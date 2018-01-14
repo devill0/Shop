@@ -31,6 +31,8 @@ namespace Shop.Web
             services.AddMvc(); 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
             //var mapper = AutoMapperConfig.GetMapper();
             //services.AddSingleton<IMapper>(mapper); // <IMapper> is not required
             services.AddSingleton(AutoMapperConfig.GetMapper());
