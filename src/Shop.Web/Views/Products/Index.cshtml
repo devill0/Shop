@@ -1,7 +1,6 @@
 ﻿@using Shop.Core.DTO;
 @model IEnumerable<ProductViewModel>
-
-@{ 
+@{
     var isAdmin = User.IsInRole(RoleDTO.Admin.ToString());
 }
 
@@ -9,17 +8,15 @@
 {
     <div class="row">
         <div class="col-lg-12">
-            <a asp-area="" asp-action="AddProduct" class="btn btn-primary">Add product</a>
+            <a asp-area="" asp-controller="Products" asp-action="Add" class="btn btn-primary">Add product</a>
         </div>
     </div>
 }
-
 <div class="row">
     <div class="col-lg-12">
         <h1>Products</h1>
     </div>
 </div>
-
 <div class="row">
     @foreach (var product in Model)
     {
@@ -30,17 +27,19 @@
                     <h6 class="card-subtitle mb-2 text-muted">@product.Category</h6>
                     <p class="card-text">@product.Price PLN</p>
                     @if (User.Identity.IsAuthenticated)
-                    {                        
+                    {
+                        @*<a href="#" title="Add to cart" class="card-link">Add to cart</a>*@
                         <form asp-action="Add" asp-controller="Cart" asp-route-productId="@product.Id" method="post">
                             <button type="submit" class="btn btn-primary">Add to cart</button>
                         </form>
-                    }                    
+                    }
                     @if (isAdmin)
                     {
-                        <a asp-controller="Products" asp-action="Update" asp-route-id="@product.Id" title="Update product" class="card-link">Update</a>
-                    }                    
+                        <a asp-action="Update" asp-route-id="@product.Id" title="Update product" class="card-link">Update</a>
+                    }
                 </div>
             </div>
         </div>
-    }          
+    }
 </div>
+

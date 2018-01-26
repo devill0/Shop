@@ -64,7 +64,7 @@ namespace Shop.Web.Controllers
             {
                 return NotFound(); //404
             }
-            var viewModel = new AddOrUpdateProductViewModel();
+            var viewModel = new AddOrUpdateProductViewModel(product);
 
             return View(viewModel);
         }

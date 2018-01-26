@@ -28,7 +28,7 @@ namespace Shop.Web.Controllers
 
         [HttpPost("login")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login([FromForm]LoginViewModel viewModel) 
+        public async Task<IActionResult> Login(LoginViewModel viewModel) 
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +48,7 @@ namespace Shop.Web.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, viewModel.Email),
-                new Claim(ClaimTypes.Role, string.Empty)
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
@@ -71,11 +71,11 @@ namespace Shop.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
+        [HttpGet("register")]
         public IActionResult Register()
             => View(new RegisterViewModel());
 
-        [HttpPost]
+        [HttpPost("register")]
         public IActionResult Register(RegisterViewModel viewModel)
         {
             if (!ModelState.IsValid)
