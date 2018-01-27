@@ -27,17 +27,30 @@ namespace Shop.Web.Controllers
         public IActionResult Index()
         {
             var cart = cartService.Get(CurrentUserId);
+            if(cart == null)
+            {
+                cartService.Create(CurrentUserId);
+                cart = cartService.Get(CurrentUserId);
+            }
             var viewModel = mapper.Map<CartViewModel>(cart);
 
             return View(viewModel);
         }
 
-        [HttpPost("items/{productId}/add")]
+        [HttpPost("items/{productId}")]
         public IActionResult Add(Guid productId)
         {
             cartService.AddProduct(CurrentUserId, productId);
 
-            return RedirectToAction("Index", "Products");
+            return Ok();
+        }
+
+        [HttpDelete("items/{productId}")]
+        public IActionResult Delete(Guid productId)
+        {
+            cartService.DeleteProduct(CurrentUserId, productId);
+
+            return Ok();
         }
     }
 }
