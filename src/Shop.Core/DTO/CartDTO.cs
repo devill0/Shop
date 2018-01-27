@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Shop.Core.DTO
 {
-    class CartDTO
+    public class CartDTO
     {
+        public IEnumerable<CartItemDTO> Items { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

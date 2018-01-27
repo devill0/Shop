@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Shop.Core.DTO;
+using System;
 
 namespace Shop.Core.Services
 {
-    class ICartService
+    public interface ICartService
     {
+        CartDTO Get(Guid userId);
+        void AddProduct(Guid userId, Guid productId);
+        void DeleteProduct(Guid userId, Guid productId);
+        void Clear(Guid userId);
+        void Create(Guid userId);
+        void Delete(Guid userId);
     }
 }
