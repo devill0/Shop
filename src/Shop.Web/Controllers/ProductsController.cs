@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Shop.Core.Domain;
 using Shop.Web.Models;
-using Shop.Core.Repositories;
 using Shop.Core.Services;
 using Shop.Core.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Shop.Web.Framework;
 
 namespace Shop.Web.Controllers
 {
     [Route("products")]
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = "require-admin")]
+    [CookieAuth("require-admin")]
     public class ProductsController : Controller
     {
         private readonly IProductService productService;

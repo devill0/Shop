@@ -66,8 +66,14 @@ namespace Shop.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
             await HttpContext.SignOutAsync();
-            cartService.Delete(CurrentUserId);
-
+            try
+            {
+                cartService.Delete(CurrentUserId);
+            }
+            catch
+            {
+            }
+            
             return RedirectToAction("Index", "Home");
         }
 

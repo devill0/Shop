@@ -7,11 +7,12 @@ using Shop.Web.Models;
 using System.Linq;
 using Shop.Core.Services;
 using AutoMapper;
+using Shop.Web.Framework;
 
 namespace Shop.Web.Controllers
-{
-    [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+{    
     [Route("cart")]
+    [CookieAuth]
     public class CartController : BaseController
     {
         private readonly ICartService cartService;
