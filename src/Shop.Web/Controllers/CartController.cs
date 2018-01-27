@@ -36,7 +36,7 @@ namespace Shop.Web.Controllers
         public IActionResult Add(Guid productId)
         {
             cartService.AddProduct(CurrentUserId, productId);
-            
+
             return RedirectToAction("Index", "Products");
         }
     }

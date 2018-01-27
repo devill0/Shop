@@ -39,7 +39,7 @@ namespace Shop.Web.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception e)
+            catch
             {
                 return BadRequest();
             }
