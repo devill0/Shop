@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Shop.Web.Framework;
 using Shop.Core.Repositories;
 using Shop.Core.Services;
-using Shop.Core.Mapper;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +33,7 @@ namespace Shop.Web
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICartService, CartService>();
             //var mapper = AutoMapperConfig.GetMapper();
             //services.AddSingleton<IMapper>(mapper); // <IMapper> is not required
             services.AddSingleton(AutoMapperConfig.GetMapper());

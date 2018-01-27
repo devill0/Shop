@@ -5,7 +5,7 @@ namespace Shop.Web.Models
 {
     public class CartViewModel
     {
-        public IList<CartItemViewModel> Items { get; } = new List<CartItemViewModel>();
-        public decimal TotalPrice => Items.Sum(i => i.TotalPrice);
+        public IList<CartItemViewModel> Items { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }

@@ -11,15 +11,15 @@ using System.Threading.Tasks;
 
 namespace Shop.Web.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly IUserService userService;
-        private readonly IMemoryCache cache;
+        private readonly ICartService cartService;
 
-        public AccountController(IUserService userService, IMemoryCache cache)
+        public AccountController(IUserService userService, ICartService cartService)
         {
             this.userService = userService;
-            this.cache = cache;
+            this.cartService = cartService;
         }
 
         [HttpGet("login")]
@@ -47,14 +47,14 @@ namespace Shop.Web.Controllers
             var user = userService.Get(viewModel.Email);
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, viewModel.Email),
+                new Claim(ClaimTypes.Name, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-            cache.Set($"{viewModel.Email}:cart", new CartViewModel(), DateTime.UtcNow.AddDays(7));
-
+            cartService.Create(user.Id);
+            
             return RedirectToAction("Index", "Cart");
         }
 
@@ -66,7 +66,7 @@ namespace Shop.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
             await HttpContext.SignOutAsync();
-            cache.Remove($"{User.Identity.Name}:cart");
+            cartService.Delete(CurrentUserId);
 
             return RedirectToAction("Index", "Home");
         }

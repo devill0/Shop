@@ -6,25 +6,27 @@ using Microsoft.Extensions.Caching.Memory;
 using Shop.Web.Models;
 using System.Linq;
 using Shop.Core.Services;
+using AutoMapper;
 
 namespace Shop.Web.Controllers
 {
     [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     [Route("cart")]
-    public class CartController : Controller
+    public class CartController : BaseController
     {
-        private readonly IMemoryCache cache;
-        private readonly IProductService productService;
+        private readonly ICartService cartService;
+        private readonly IMapper mapper;
 
-        public CartController(IMemoryCache cache, IProductService productService)
+        public CartController(ICartService cartService, IMapper mapper)
         {
-            this.cache = cache;
-            this.productService = productService;
+            this.cartService = cartService;
+            this.mapper = mapper;
         }
 
         public IActionResult Index()
         {
-            var viewModel = cache.Get<CartViewModel>($"{User.Identity.Name}:cart");
+            var cart = cartService.Get(CurrentUserId);
+            var viewModel = mapper.Map<CartViewModel>(cart);
 
             return View(viewModel);
         }
@@ -32,32 +34,9 @@ namespace Shop.Web.Controllers
         [HttpPost("items/{productId}/add")]
         public IActionResult Add(Guid productId)
         {
-            var product = productService.Get(productId);
-            if (product == null)
-            {
-                return BadRequest();
-            }
-
-            var cart = cache.Get<CartViewModel>($"{User.Identity.Name}:cart");
-            var cartItem = cart.Items.SingleOrDefault(i => i.ProductId == productId);
-            if(cartItem == null)
-            {
-                cartItem = new CartItemViewModel
-                {
-                    ProductId = productId,
-                    ProductName = product.Name,
-                    UnitPrice = product.Price,
-                    Quantity = 1
-                };
-                cart.Items.Add(cartItem);
-            }
-            else
-            {
-                cartItem.Quantity++;
-            }
-            cache.Set($"{User.Identity.Name}:cart", cart);
-
-            return RedirectToAction(nameof(Index), "Products");
+            cartService.AddProduct(CurrentUserId, productId);
+            
+            return RedirectToAction("Index", "Products");
         }
     }
 }
