@@ -15,6 +15,12 @@ namespace Shop.Web.Framework
                 cfg.CreateMap<CartItem, CartItemDTO>();
                 cfg.CreateMap<CartDTO, CartViewModel>();
                 cfg.CreateMap<CartItemDTO, CartItemViewModel>();
+
+                cfg.CreateMap<Order, OrderDTO>();
+                cfg.CreateMap<OrderItem, OrderItemDTO>();
+                cfg.CreateMap<OrderDTO, OrderViewModel>();
+                cfg.CreateMap<OrderItemDTO, OrderItemViewModel>();
+
                 cfg.CreateMap<Product, ProductDTO>();
                 cfg.CreateMap<User, UserDTO>().ForMember(m => m.Role, o => o.MapFrom(p =>
                     (RoleDTO)Enum.Parse(typeof(RoleDTO), p.Role.ToString(), true)));

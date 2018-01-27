@@ -19,5 +19,8 @@ namespace Shop.Core.Repositories
 
         public User Get(string email)
             => users.SingleOrDefault(x => string.Equals(x.Email, email, StringComparison.InvariantCultureIgnoreCase));
+
+        public User Get(Guid id)
+            => users.SingleOrDefault(x => x.Id == id);
     }
 }

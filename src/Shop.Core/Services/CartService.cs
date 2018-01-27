@@ -12,23 +12,23 @@ namespace Shop.Core.Services
     {
         private readonly IUserRepository userRepository;
         private readonly IProductRepository productRepository;
-        private readonly IMemoryCache cache;
+        private readonly ICartManager cartManager;
         private readonly IMapper mapper;
 
         public CartService(IUserRepository userRepository,
             IProductRepository productRepository,
-            IMemoryCache cache,
+            ICartManager cartManager,
             IMapper mapper)
         {
             this.userRepository = userRepository;
             this.productRepository = productRepository;
-            this.cache = cache;
+            this.cartManager = cartManager;
             this.mapper = mapper;
         }
 
         public CartDTO Get(Guid userId)
         {
-            var cart = GetCart(userId);
+            var cart = cartManager.Get(userId);
 
             return cart == null ? null : mapper.Map<CartDTO>(cart);
         }
@@ -37,43 +37,36 @@ namespace Shop.Core.Services
             => ExecuteOnCart(userId, cart =>
             {
                 var product = productRepository.Get(productId)
-                    .FailIfNull($"Product with id: {productId} was not found.");
-               
+                    .FailIfNull($"Product with id: '{productId}' was not found.");
                 cart.AddProduct(product);
-            });    
+            });
 
         public void DeleteProduct(Guid userId, Guid productId)
             => ExecuteOnCart(userId, cart => cart.DeleteProduct(productId));
 
         public void Clear(Guid userId)
             => ExecuteOnCart(userId, cart => cart.Clear());
-       
+
         public void Create(Guid userId)
         {
-            GetCart(userId).FailIfExists($"Cart already exists for user with id: '{userId}'.");            
-            SetCart(userId, new Cart());
+            cartManager.Get(userId).FailIfExists($"Cart already exists for user with id: '{userId}'.");
+            cartManager.Set(userId, new Cart());
         }
 
         public void Delete(Guid userId)
         {
             GetCartOrFail(userId);
-            cache.Remove(GetCartKey(userId));
+            cartManager.Delete(userId);
         }
 
         private void ExecuteOnCart(Guid userId, Action<Cart> action)
         {
             var cart = GetCartOrFail(userId);
             action(cart);
-            SetCart(userId, cart);
+            cartManager.Set(userId, cart);
         }
 
         private Cart GetCartOrFail(Guid userId)
-            => GetCart(userId).FailIfNull($"Cart was not found for user with id: '{userId}'.");                                 
-
-        private Cart GetCart(Guid userId) => cache.Get<Cart>(GetCartKey(userId));
-
-        private Cart SetCart(Guid userId, Cart cart) => cache.Set(GetCartKey(userId), cart);
-
-        private string GetCartKey(Guid userId) => $"{userId}:cart";
+            => cartManager.Get(userId).FailIfNull($"Cart was not found for user with id: '{userId}'.");
     }
 }
