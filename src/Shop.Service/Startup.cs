@@ -8,6 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Shop.Core.Repositories;
+using Shop.Core.Services;
+using Shop.Service.Framework;
+using Newtonsoft.Json;
 
 namespace Shop.Service
 {
@@ -23,7 +27,13 @@ namespace Shop.Service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(o => 
+            {
+                o.SerializerSettings.Formatting = Formatting.Indented;
+            });
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddSingleton(AutoMapperConfig.GetMapper());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
