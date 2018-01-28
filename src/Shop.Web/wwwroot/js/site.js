@@ -19,6 +19,10 @@
             $('#total-price').text(totalPrice - productUniPrice);
 
             removeCartItem(productId).then(function (response) {
+                itemsCount -= 1;
+                if (itemsCount === 0) {
+                    $('#purchase').hide();
+                }
                 if (quantity === 1) {
                     item.parent().parent().fadeOut();
                     $('#items-count').text(--itemsCount);
@@ -28,7 +32,7 @@
                 var updateQuantity = --quantity;
                 item.data('quantity', updateQuantity);       
                 $(`#quantity-${productId}`).text(updateQuantity);
-                $(`#total-price-${productId}`).text(productTotalPrice - productUniPrice));
+                $(`#total-price-${productId}`).text(productTotalPrice - productUniPrice);                
             });
         })
     }
