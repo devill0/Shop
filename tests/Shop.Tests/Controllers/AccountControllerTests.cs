@@ -42,7 +42,7 @@ namespace Shop.Tests.Controllers
             result.ControllerName = "Cart";
             userServiceMock.Verify(x => x.Login(viewModel.Email, viewModel.Password), Times.Once);
             authenticatorMock.Verify(x => x.SignInAsync(It.IsAny<ClaimsPrincipal>()), Times.Once);
-            cartServiceMock.Verify(x => x.Create(userDTO.Id));
+            cartServiceMock.Verify(x => x.Create(userDTO.Id), Times.Once);
         }
     }
 }

@@ -11,5 +11,6 @@ namespace Shop.Core.Services
         IEnumerable<ProductDTO> GetAll();
         void Add(Guid id, string name, string category, decimal price);
         void Update(ProductDTO product);
+        void Delete(Guid id);
     }
 }

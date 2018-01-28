@@ -49,5 +49,8 @@ namespace Shop.Core.Services
             existingProduct.SetPrice(product.Price);
             productRepository.Update(existingProduct);
         }
+
+        public void Delete(Guid id)
+            => productRepository.Delete(id);
     }
 }
