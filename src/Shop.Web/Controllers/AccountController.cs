@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Shop.Core.Services;
+using Shop.Web.Framework;
 using Shop.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace Shop.Web.Controllers
     {
         private readonly IUserService userService;
         private readonly ICartService cartService;
+        private readonly IAuthenticator authenticator;
 
-        public AccountController(IUserService userService, ICartService cartService)
+        public AccountController(IUserService userService, ICartService cartService, IAuthenticator authenticator)
         {
             this.userService = userService;
             this.cartService = cartService;
+            this.authenticator = authenticator;
         }
 
         [HttpGet("login")]
@@ -52,7 +55,7 @@ namespace Shop.Web.Controllers
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            await authenticator.SignInAsync(principal);
             cartService.Create(user.Id);
             
             return RedirectToAction("Index", "Cart");

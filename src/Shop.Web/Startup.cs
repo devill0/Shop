@@ -36,6 +36,7 @@ namespace Shop.Web
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICartManager, CartManager>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IAuthenticator, Authenticator>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             //var mapper = AutoMapperConfig.GetMapper();
             //services.AddSingleton<IMapper>(mapper); // <IMapper> is not required
