@@ -31,9 +31,9 @@ namespace Shop.Core.Services
             => productRepository.GetAll()
                                 .Select(p => mapper.Map<ProductDTO>(p));
 
-        public void Add(string name, string category, decimal price)
+        public void Add(Guid id, string name, string category, decimal price)
         {
-            var product = new Product(name, category, price);
+            var product = new Product(id, name, category, price);
             productRepository.Add(product);
         }
 

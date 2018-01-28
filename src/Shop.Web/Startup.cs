@@ -13,6 +13,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Shop.Core.DTO;
+using Shop.Core.Options;
 
 namespace Shop.Web
 {
@@ -41,6 +42,7 @@ namespace Shop.Web
             //var mapper = AutoMapperConfig.GetMapper();
             //services.AddSingleton<IMapper>(mapper); // <IMapper> is not required
             services.AddSingleton(AutoMapperConfig.GetMapper());
+            services.AddSingleton<IServiceClient, ServiceClient>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(c =>
                 {
@@ -51,6 +53,7 @@ namespace Shop.Web
             services.AddAuthorization(a => a.AddPolicy("require-admin",
                 p => p.RequireRole(RoleDTO.Admin.ToString())));
             services.AddMemoryCache();
+            services.Configure<ServiceClientOptions>(Configuration.GetSection("serviceClient"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

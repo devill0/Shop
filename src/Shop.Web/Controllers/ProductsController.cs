@@ -6,6 +6,7 @@ using Shop.Core.Services;
 using Shop.Core.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Shop.Web.Framework;
+using System.Threading.Tasks;
 
 namespace Shop.Web.Controllers
 {
@@ -14,21 +15,25 @@ namespace Shop.Web.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService productService;
+        private readonly IServiceClient serviceClient;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IServiceClient serviceClient)
         {
-            this.productService = productService; //wstrzykiwanie wartości przez konstruktor
+            this.productService = productService;
+            this.serviceClient = serviceClient;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = productService
-                .GetAll()
-                .Select(p => new ProductViewModel(p));
+            //var products = productService
+            //    .GetAll()
+            //    .Select(p => new ProductViewModel(p));
+            var products = await serviceClient.GetProductAsync();
+            var viewModels = products.Select(p => new ProductViewModel(p));
 
-            return View(products);
+            return View(viewModels);
         }
 
         [HttpGet("add")]
@@ -40,14 +45,14 @@ namespace Shop.Web.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult AddProduct(AddOrUpdateProductViewModel viewModel)
+        public async Task<IActionResult> AddProduct(AddOrUpdateProductViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View(viewModel);
             }
 
-            productService.Add(viewModel.Name, viewModel.Category, viewModel.Price);
+            await serviceClient.AddProductAsync(viewModel.Name, viewModel.Category, viewModel.Price);
 
             return RedirectToAction(nameof(Index));
         }
